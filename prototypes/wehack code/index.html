@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Simple AI Chatbot</title>
+</head>
+<body>
+  <main>
+    <div class="msg-container">
+      <!-- Chat messages will be displayed here -->
+    </div>
+    <div class="user-input-div">
+      <input
+        type="text"
+        placeholder="Chat With Your Bot"
+        class="user-input"
+      />
+      <button class="btn">Go</button>
+    </div>
+  </main>
+
+  <!-- Importmap for GoogleGenerativeAI library -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+
+  <!-- Script to initialize the Gemini API and chatbot logic -->
+  <script type="module">
+    // Import GoogleGenerativeAI library
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    // Initialize API key and GoogleGenerativeAI instance
+    const API_KEY = "--your-api-key-here–";
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    // Function to run the chatbot logic
+    async function run() {
+      // Get user input
+      let userInput = document.querySelector('.user-input').value;
+
+      // Generate content using Gemini model
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(userInput);
+      const response = await result.response;
+      const text = response.text();
+
+      // Display bot response (you can customize this based on your HTML structure)
+      let botMessageDiv = document.createElement("div");
+      botMessageDiv.className = "bot-msg";
+      botMessageDiv.textContent = `Bot: ${text}`;
+      document.querySelector('.msg-container').appendChild(botMessageDiv);
+    }
+
+    // Event listener for button click
+    document.querySelector('.btn').addEventListener('click', run);
+  </script>
+</body>
+</html>
